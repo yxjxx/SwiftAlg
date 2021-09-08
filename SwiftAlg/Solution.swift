@@ -8,6 +8,56 @@
 import Foundation
 
 public class Solution {
+    func myPow(_ x: Double, _ n: Int) -> Double {
+        if n == 0 {
+            return 1
+        }
+        if n == 1 {
+            return x
+        }
+        if n < 0 {
+            let nn = -n
+            return 1/myPow(x, nn)
+        }
+        let r = myPow(x, n/2)
+        if n % 2 == 0 {
+            return r*r
+        } else {
+            return Double(x)*r*r
+        }
+    }
+    
+    func getKthFromEnd(_ head: ListNode?, _ k: Int) -> ListNode? {
+        if k < 1 {
+            return nil
+        }
+        let dummy = ListNode()
+        dummy.next = head
+        var slow: ListNode? = dummy
+        var fast: ListNode? = dummy
+        var steps = k
+        while steps > 0 {
+            fast = fast?.next
+            steps -= 1
+        }
+        while fast != nil {
+            slow = slow?.next
+            fast = fast?.next
+        }
+        return slow
+    }
+
+    func invertTree(_ root: TreeNode?) -> TreeNode? {
+        if root == nil {
+            return nil
+        }
+        let left = invertTree(root?.left)
+        let right = invertTree(root?.right)
+        root?.left = right
+        root?.right = left
+        return root
+    }
+
     func climbStairs(_ n: Int) -> Int {
         var p = 0
         var q = 0
@@ -1599,11 +1649,21 @@ func inorderTraversal(_ root: TreeNode?) -> [Int] {
         robot(root!.right, &result)
     }
 
+    func maxSubArray(_ nums: [Int]) -> Int {
+        var pre: Int = 0
+        var result: Int = nums[0]
+        for (_, value) in nums.enumerated() {
+            pre = max(value, pre + value)
+            result = max(result, pre)
+        }
+        return result
+    }
+
     
     //[-1, 1, 2, 3, -4, 6, -1]
     //动态规划：递推关系f(n) = max(f(n-1) + A[n], A[n])
     //函数f(n)，表示以第n个数为结束点的子数列的最大和
-    func maxSubArray(_ nums: [Int]) -> Int {
+    func maxSubArray2(_ nums: [Int]) -> Int {
         if nums.count <= 0 {
             return 0
         }

@@ -6,6 +6,9 @@
 //
 
 import Foundation
+/**
+ 实现 str[i] 访问 swift 字符串
+ */
 extension String {
 
     fileprivate subscript (i: Int) -> Character {

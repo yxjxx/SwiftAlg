@@ -7,6 +7,9 @@
 
 import Foundation
 
+/**
+ 使用除留余数法和链地址法实现一个简单的 hash table
+ */
 //两个范型 Key 和 Value
 public struct MyHashTable<Key: Hashable, Value> {
 
