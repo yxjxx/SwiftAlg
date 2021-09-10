@@ -12,6 +12,7 @@
 		DEB1536626E77758002B7BD7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB1536526E77758002B7BD7 /* Extensions.swift */; };
 		DEB1537B26E899DD002B7BD7 /* MyHashTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB1537A26E899DD002B7BD7 /* MyHashTable.swift */; };
 		DEB1537D26E8AF63002B7BD7 /* ReverseList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB1537C26E8AF63002B7BD7 /* ReverseList.swift */; };
+		DEB1537F26E8B4B8002B7BD7 /* Sorter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB1537E26E8B4B8002B7BD7 /* Sorter.swift */; };
 		DEF691302608C2A5004F31DE /* Solution.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF6912F2608C2A5004F31DE /* Solution.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +35,7 @@
 		DEB1536526E77758002B7BD7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DEB1537A26E899DD002B7BD7 /* MyHashTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyHashTable.swift; sourceTree = "<group>"; };
 		DEB1537C26E8AF63002B7BD7 /* ReverseList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReverseList.swift; sourceTree = "<group>"; };
+		DEB1537E26E8B4B8002B7BD7 /* Sorter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sorter.swift; sourceTree = "<group>"; };
 		DEF6912F2608C2A5004F31DE /* Solution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solution.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,6 +75,7 @@
 				DEB1536526E77758002B7BD7 /* Extensions.swift */,
 				DEB1537A26E899DD002B7BD7 /* MyHashTable.swift */,
 				DEB1537C26E8AF63002B7BD7 /* ReverseList.swift */,
+				DEB1537E26E8B4B8002B7BD7 /* Sorter.swift */,
 			);
 			path = SwiftAlg;
 			sourceTree = "<group>";
@@ -136,6 +139,7 @@
 			files = (
 				DEB1537D26E8AF63002B7BD7 /* ReverseList.swift in Sources */,
 				DEF691302608C2A5004F31DE /* Solution.swift in Sources */,
+				DEB1537F26E8B4B8002B7BD7 /* Sorter.swift in Sources */,
 				DEB1536426E2132E002B7BD7 /* DataStructs.swift in Sources */,
 				DEB1537B26E899DD002B7BD7 /* MyHashTable.swift in Sources */,
 				DE3A5B82260748F800484C51 /* main.swift in Sources */,

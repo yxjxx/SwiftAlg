@@ -8,6 +8,90 @@
 import Foundation
 
 public class Solution {
+    class Solution {
+        func moveZeroes(_ nums: inout [Int]) {
+            var left = 0
+            var right = nums.count - 1
+            while left < right {
+                if nums[right] == 0 {
+                    right -= 1
+                } else if nums[right] != 0 && nums[left] == 0 {
+                    nums.swapAt(left, right)
+                    left += 1
+                    right -= 1
+                } else {
+
+                }
+            }
+        }
+    }
+
+    func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        var dict:[Int : Int] = [:]
+        for num in nums1 {
+            dict[num] = 1
+        }
+        var ans: Set<Int> = Set()
+        for num in nums2 {
+            if dict[num] != nil {
+                ans.insert(num)
+            }
+        }
+        return Array(ans)
+    }
+    func trailingZeroes(_ n: Int) -> Int {
+        var ans = 0
+        var n = n
+        while n > 0 {
+            n = n / 5
+            ans += n
+        }
+        return ans
+    }
+    func containsDuplicate(_ nums: [Int]) -> Bool {
+        var dict:[Int : Int] = [:]
+        for n in nums {
+            if dict[n] == nil {
+                dict[n] = 1
+            } else {
+                dict[n] = -1
+            }
+        }
+        for (_, v) in dict {
+            if v == -1 {
+                return true
+            }
+        }
+        return false
+    }
+    func isPowerOfThree(_ n: Int) -> Bool {
+        if n < 1 {
+            return false
+        }
+        var n = n
+        while n % 3 == 0 {
+            n = n / 3
+        }
+        return (n == 1)
+    }
+
+    func firstUniqChar(_ s: String) -> Int {
+        var dict:[Character : Int] = [:]
+        for c in s {
+            if dict[c] != nil {
+                dict[c] = dict[c]! + 1
+            } else {
+                dict[c] = 1
+            }
+        }
+        for (index, c) in s.enumerated() {
+            if dict[c]! == 1 {
+                return index
+            }
+        }
+        return -1
+    }
+
     func myPow(_ x: Double, _ n: Int) -> Double {
         if n == 0 {
             return 1
@@ -550,7 +634,7 @@ public class Solution {
         return ans
     }
 
-    func pathSum(_ root: TreeNode?, _ targetSum: Int) -> Int {
+    func pathSum22(_ root: TreeNode?, _ targetSum: Int) -> Int {
         if root == nil {
             return 0
         }
@@ -567,7 +651,26 @@ public class Solution {
             ans += robot(root?.right, sum)
             return ans
         }
-        return robot(root, targetSum) + pathSum(root?.left, targetSum) + pathSum(root?.right, targetSum)
+        return robot(root, targetSum) + pathSum22(root?.left, targetSum) + pathSum22(root?.right, targetSum)
+    }
+
+    func pathSum(_ root: TreeNode?, _ targetSum: Int) -> [[Int]] {
+        var ans: [[Int]] = []
+        func dfs(_ root: TreeNode?, _ targetSum: Int, _ path: inout [Int]) {
+            if root == nil {
+                return
+            }
+            path.append(root!.val)
+            if root?.left == nil && root?.right == nil && targetSum == root!.val {
+                ans.append(path)
+            }
+            dfs(root?.left, targetSum - root!.val, &path)
+            dfs(root?.right, targetSum - root!.val, &path)
+            path.removeLast()
+        }
+        var path: [Int] = []
+        dfs(root, targetSum, &path)
+        return ans
     }
 
     func pathSum2(_ root: TreeNode?, _ targetSum: Int) -> [[Int]] {

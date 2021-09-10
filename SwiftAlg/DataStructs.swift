@@ -6,6 +6,53 @@
 //
 
 import Foundation
+class MyQueue2 {
+    private var stack1: Stack<Int>
+    private var stack2: Stack<Int>
+
+    /** Initialize your data structure here. */
+    init() {
+        stack1 = Stack() //用于存储
+        stack2 = Stack() //用于辅助，新入队的元素一定在堆底
+    }
+
+    /** Push element x to the back of queue. */
+    func push(_ x: Int) {
+        while !stack1.isEmpty { //将 stack1 元素全部加入 stack2
+            let e = stack1.pop()
+            stack2.push(e!)
+        }
+        stack1.push(x)
+        while !stack2.isEmpty { //将 stack2 元素移回 stack2
+            let e = stack2.pop()
+            stack1.push(e!)
+        }
+    }
+
+    /** Removes the element from in front of queue and returns that element. */
+    func pop() -> Int {
+        return stack1.pop()!
+    }
+
+    /** Get the front element. */
+    func peek() -> Int {
+        return stack1.top!
+    }
+
+    /** Returns whether the queue is empty. */
+    func empty() -> Bool {
+        return stack1.isEmpty
+    }
+}
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * let obj = MyQueue()
+ * obj.push(x)
+ * let ret_2: Int = obj.pop()
+ * let ret_3: Int = obj.peek()
+ * let ret_4: Bool = obj.empty()
+ */
 
 public struct Queue<T> {
     fileprivate var array = [T]()
@@ -262,3 +309,134 @@ class Codec {
 // var ser = Codec()
 // var deser = Codec()
 // deser.deserialize(ser.serialize(root))
+
+class MyStack {
+    private var queue1: Queue<Int> //用于存储
+    private var queue2: Queue<Int> //用与入队
+
+    /** Initialize your data structure here. */
+    init() {
+        queue1 = Queue()
+        queue2 = Queue()
+    }
+
+    /** Push element x onto stack. */
+    func push(_ x: Int) {
+        queue2.enqueue(x)
+        while !queue1.isEmpty {
+            let e = queue1.dequeue()
+            queue2.enqueue(e!)
+        }
+        let temp = queue1
+        queue1 = queue2
+        queue2 = temp //关键点 交换 queue1 和 queue2
+    }
+
+    /** Removes the element on top of the stack and returns that element. */
+    func pop() -> Int {
+        return queue1.dequeue() ?? 0
+    }
+
+    /** Get the top element. */
+    func top() -> Int {
+        return queue1.front ?? 0
+    }
+
+    /** Returns whether the stack is empty. */
+    func empty() -> Bool {
+        return queue1.isEmpty
+    }
+}
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * let obj = MyStack()
+ * obj.push(x)
+ * let ret_2: Int = obj.pop()
+ * let ret_3: Int = obj.top()
+ * let ret_4: Bool = obj.empty()
+ */
+
+
+public class DListNode {
+    public var key: Int
+    public var val: Int
+    public var next: DListNode?
+    public var pre: DListNode?
+    public init() { self.key = 0; self.val = 0; self.next = nil; self.pre = nil;}
+    public init(_ key: Int, _ val: Int) {self.key = key; self.val = val; self.next = nil; self.pre = nil;}
+    public init(_ key: Int, _ val: Int, _ next: DListNode?, _ pre: DListNode?) { self.key = key; self.val = val; self.next = next; self.pre = pre }
+}
+
+class LRUCache {
+    var dict: [Int:DListNode]
+    var head: DListNode?
+    var tail: DListNode?
+    var capacity: Int
+    var size: Int = 0
+    init(_ capacity: Int) {
+        dict = [:]
+        head = DListNode()
+        tail = DListNode()
+        head?.next = tail
+        tail?.pre = head
+        self.capacity = capacity
+    }
+
+    func addToHead(_ node: DListNode) {
+        node.pre = head
+        node.next = self.head?.next
+        head?.next?.pre = node
+        head?.next = node
+    }
+
+    func removeNode(_ node: DListNode) {
+        node.pre?.next = node.next
+        node.next?.pre = node.pre
+    }
+
+    func moveToHead(_ node: DListNode) {
+        removeNode(node)
+        addToHead(node)
+    }
+
+    func removeTail() -> DListNode {
+        let node = self.tail!.pre!
+        removeNode(node)
+        return node
+    }
+
+    func get(_ key: Int) -> Int {
+        if dict[key] == nil {
+            return -1
+        }
+        let node = dict[key]!
+        moveToHead(node)
+        return node.val
+    }
+
+    func put(_ key: Int, _ value: Int) {
+        if dict[key] != nil { //更新
+            let node = dict[key]!
+            node.val = value
+            moveToHead(node)
+        } else {
+            let node = DListNode(key, value)
+            dict[key] = node
+            addToHead(node)
+            size += 1
+            if size > capacity {
+                let removed = removeTail()
+                dict.removeValue(forKey: removed.key)
+                size -= 1
+            }
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * let obj = LRUCache(capacity)
+ * let ret_1: Int = obj.get(key)
+ * obj.put(key, value)
+ */

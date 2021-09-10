@@ -117,12 +117,15 @@ var t1 = TreeNode(1, t2, t3)
 //let ans = a.climbStairs(44)
 //print(ans)
 
-var ht:MyHashTable<Int, String> = MyHashTable(10)
-ht.setValue("hello", forKey: 1)
-ht.setValue("world", forKey: 2)
-ht.removeValue(forKey: 2)
-print(ht.value(forKey: 1))
+//var ht:MyHashTable<Int, String> = MyHashTable(10)
+//ht.setValue("hello", forKey: 1)
+//ht.setValue("world", forKey: 2)
+//ht.removeValue(forKey: 2)
+//print(ht.value(forKey: 1))
 
 
 
+let sorter = Sorter()
+let ans = sorter.sortArray([5, 4, 3, 6, 1, 2])
+print(ans)
 
