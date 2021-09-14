@@ -94,6 +94,9 @@ public struct Stack<T> {
      public var top: T? {
         return array.last
      }
+    public func toArray() -> Array<T> {
+        return array
+    }
 }
 
 public struct StackNode {

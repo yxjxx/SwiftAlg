@@ -7,23 +7,555 @@
 
 import Foundation
 
-public class Solution {
-    class Solution {
-        func moveZeroes(_ nums: inout [Int]) {
-            var left = 0
-            var right = nums.count - 1
-            while left < right {
-                if nums[right] == 0 {
-                    right -= 1
-                } else if nums[right] != 0 && nums[left] == 0 {
-                    nums.swapAt(left, right)
-                    left += 1
-                    right -= 1
-                } else {
+struct NumAndIndex: Comparable {
+    static func < (lhs: NumAndIndex, rhs: NumAndIndex) -> Bool {
+        return lhs.num > rhs.num
+    }
+    var num: Int
+    var index: Int
+    init(_ num: Int, _ index: Int) {
+        self.num = num
+        self.index = index
+    }
 
+}
+
+class KthLargest {
+    var queue: PriorityQueue<Int>
+    var k: Int
+    init(_ k: Int, _ nums: [Int]) {
+        self.k = k
+        queue = PriorityQueue()
+        for num in nums {
+            let _ = add(num)
+        }
+    }
+
+    func add(_ val: Int) -> Int {
+        queue.add(val)
+        if queue.size > k {
+            let _ = queue.dequeue()
+        }
+        return queue.peek()!
+    }
+}
+
+/**
+ * Your KthLargest object will be instantiated and called as such:
+ * let obj = KthLargest(k, nums)
+ * let ret_1: Int = obj.add(val)
+ */
+
+public class Solution {
+    func findDisappearedNumbers(_ nums: [Int]) -> [Int] {
+        //数组做 hash
+        var nums = nums
+        let count = nums.count
+        for num in nums {
+            let x = (num - 1)  % count
+            nums[x] = nums[x] + count
+        }
+        var ans: [Int] = []
+        for (index, num) in nums.enumerated() {
+            if num <= count {
+                ans.append(index + 1)
+            }
+        }
+        return ans
+    }
+
+    func topKFrequent(_ nums: [Int], _ k: Int) -> [Int] {
+        var dict: [Int:Int] = [:]
+        for (_, num) in nums.enumerated() {
+            dict[num] = (dict[num] ?? 0) + 1
+        }
+        var buckets : [[Int]] = Array(repeating: Array(), count: nums.count)
+        for (key, value) in dict {
+            buckets[value - 1].append(key)
+        }
+        var res:[Int] = []
+        for arr in buckets.reversed() {
+            for num in arr {
+                res.append(num)
+            }
+            if res.count >= k {
+                return res
+            }
+        }
+        return res
+    }
+
+    func missingTwo(_ nums: [Int]) -> [Int] {
+        var ans: [Int] = []
+        var nums = nums
+        nums.append(0)
+        nums.append(0)
+        //数值的范围为 1...nums.count+2
+        for index in (0..<nums.count) {
+            var num = nums[index]
+            while num != index + 1 && num != 0 {
+                nums.swapAt(index, num-1)
+                num = nums[index]
+                if num == 0 {
+                    break
                 }
             }
         }
+        for (index, num) in nums.enumerated() {
+            if num == 0 {
+                ans.append(index+1)
+            }
+        }
+        return ans
+    }
+
+    func fourSumCount(_ nums1: [Int], _ nums2: [Int], _ nums3: [Int], _ nums4: [Int]) -> Int {
+        var dict: [Int:Int] = [:]
+        var ans = 0
+        for a in nums1 {
+            for b in nums2 {
+                dict[a+b] = (dict[a+b] ?? 0) + 1
+            }
+        }
+        for c in nums3 {
+            for d in nums4 {
+                if dict[-c-d] != nil {
+                    ans += dict[-c-d] ?? 0
+                }
+            }
+        }
+        return ans
+    }
+
+    func fourSum(_ nums: [Int], _ target: Int) -> [[Int]] {
+        func twoSum(_ nums: [Int], _ target: Int, _ start: Int, _ end: Int) -> [(Int, Int)] {
+            var start = start
+            var end = end
+            var res : [(Int, Int)] = []
+            while (start < end) {
+                let s = nums[start] + nums[end]
+                if s == target {
+                    res.append((start, end))
+                    start += 1
+                    while start < end && nums[start] == nums[start - 1] {
+                        start += 1
+                    }
+                    end -= 1
+                    while start < end && nums[end] == nums[end + 1] {
+                        end -= 1
+                    }
+                } else if s < target {
+                    start += 1
+                } else {
+                    end -= 1
+                }
+            }
+            return res
+        }
+
+        var ans: [[Int]] = []
+        if nums.count < 4 {
+            return []
+        }
+        let nums = nums.sorted{$0 < $1}
+        for i in (0..<nums.count - 3 ) {
+            if i > 0 && nums[i] == nums[i-1] {
+                continue
+            }
+            for j in (i+1..<nums.count - 2) {
+                if j > i+1 && nums[j] == nums[j-1] {
+                    continue
+                }
+                let a = twoSum(nums, target-nums[i]-nums[j], j+1, nums.count - 1)
+                for r in a {
+                    ans.append([nums[i], nums[j], nums[r.0], nums[r.1]])
+                }
+            }
+        }
+        return ans
+    }
+
+    func permute(_ nums: [Int]) -> [[Int]] {
+        func dfs(_ nums: [Int], _ depth: Int, _ path: inout Stack<Int>, _ used: inout [Bool], _ ans: inout [[Int]]) {
+            if depth == nums.count {//递归结束的条件，遍历到了叶子结点
+                ans.append(path.toArray())
+                return
+            }
+            for (index, num) in nums.enumerated() {
+                if used[index] {
+                    continue
+                }
+                //回溯法， dfs 前后执行相反的操作
+                path.push(num)
+                used[index] = true
+                dfs(nums, depth + 1, &path, &used, &ans)
+                let _ = path.pop()
+                used[index] = false
+            }
+        }
+
+        var ans: [[Int]] = []
+        var path: Stack<Int> = Stack()
+        var used: [Bool] = Array.init(repeating: false, count: nums.count)
+        let depth = 0
+        dfs(nums, depth, &path, &used, &ans)
+        return ans
+    }
+
+    func lengthOfLIS(_ nums: [Int]) -> Int {
+        if nums.count <= 1 {
+            return nums.count
+        }
+        // tail 数组的定义：长度为 i + 1 的上升子序列的末尾最小是几
+        var tails : [Int] = []
+        tails.append(nums[0])
+        for i in (1..<nums.count) {
+            if nums[i] > tails.last! {
+                tails.append(nums[i])
+            } else {
+                // 使用二分查找法，在有序数组 tail 中，找到第 1 个大于等于 nums[i] 的元素，尝试让那个元素更小
+                var left = 0
+                var right = tails.count - 1
+                while (left < right) {
+                    let middle = left + (right - left)/2
+                    if tails[middle] < nums[i] {
+                        left = middle + 1
+                    } else {
+                        right = middle
+                    }
+                }
+                tails[left] = nums[i]
+            }
+        }
+        return tails.count
+    }
+    func lengthOfLIS2(_ nums: [Int]) -> Int {
+        if nums.count <= 0 {
+            return 0
+        }
+        var ans = 1
+        //dp[i] 表示以 num[i] 结尾的数组的最长子序列长度
+        //dp[i] = max(dp[j]) + 1 其中 j < i, nums[i] > nums[j]
+        var dp: [Int] = Array.init(repeating: 1, count: nums.count)
+        for i in (1..<nums.count) {
+            for j in (0..<i) {
+                if nums[i] > nums[j] {
+                    dp[i] = max(dp[i], dp[j] + 1)
+                }
+            }
+            ans = max(ans, dp[i])
+        }
+        return ans
+    }
+    func increasingTriplet(_ nums: [Int]) -> Bool {
+        if nums.count < 3 {
+            return false
+        }
+        var small = Int.max
+        var medium = Int.max
+        for i in (0..<nums.count) {
+            if nums[i] <= small {
+                small = nums[i]
+            } else if nums[i] <= medium {
+                medium = nums[i]
+            } else {
+                return true
+            }
+        }
+        return false
+    }
+    func maxProfit(_ prices: [Int]) -> Int {
+        var ans = 0
+        for i in (1..<prices.count) {
+            ans += max(0, prices[i] - prices[i-1])
+        }
+        return ans
+    }
+    func maxArea(_ height: [Int]) -> Int {
+        var ans = 0
+        var left = 0
+        var right = height.count - 1
+        while left < right {
+            let area = min(height[left], height[right]) * (right - left)
+            ans = max(ans, area)
+            if height[left] <= height[right] {
+                left += 1
+            } else {
+                right -= 1
+            }
+        }
+        return ans
+    }
+
+    func candy(_ ratings: [Int]) -> Int {
+        if ratings.count < 2 {
+            return ratings.count
+        }
+        var res: [Int] = Array.init(repeating: 1, count: ratings.count)
+        for i in (1..<ratings.count) {
+            if ratings[i] > ratings[i-1] {
+                res[i] = res[i-1] + 1
+            }
+        }
+        for i in (1..<ratings.count).reversed() {
+            if ratings[i] < ratings[i-1] {
+                res[i-1] = max(res[i-1], res[i] + 1)
+            }
+        }
+        let total = res.reduce(0, +)
+        return total
+    }
+
+    func findContentChildren(_ g: [Int], _ s: [Int]) -> Int {
+        let g = g.sorted{$0 < $1}
+        let s = s.sorted{$0 < $1}
+        var child = 0
+        var cookie = 0
+        while child < g.count && cookie < s.count {
+            if g[child] <= s[cookie] {
+                child += 1
+            }
+            cookie += 1
+        }
+        return child
+    }
+
+    func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
+        var ans:[Int] = []
+        var right = 0
+        let queue: PriorityQueue<NumAndIndex> = PriorityQueue()
+        while right < k {
+            queue.add(NumAndIndex(nums[right], right))
+            right += 1
+        }
+        if let a = queue.peek()?.num {
+            ans.append(a)
+        }
+        for i in (k..<nums.count) {
+            queue.add(NumAndIndex(nums[i], i))
+            while queue.peek()!.index <= i - k {
+                let _ = queue.dequeue()
+            }
+            ans.append(queue.peek()!.num)
+        }
+        return ans
+    }
+
+    func minWindow(_ s: String, _ t: String) -> String {
+        let sa = Array(s)
+        var left = 0
+        var right = 0
+        var dict: [Character:Int] = [:]//[char:t比当前s子串 char 多出现的次数]
+        for c in Array(t) {
+            dict[c] = (dict[c] ?? 0) + 1
+        }
+        var ans = ""
+        var minLen = Int.max
+        var counter = t.count
+        //当窗口包含 t 全部所需的字符后（counter == 0），如果能收缩，我们就收缩窗口直到得到最小窗口。
+        while right <= sa.count-1 {//一直移动右指针到出现覆盖t开始移动左指针直到不能覆盖t
+            if (dict[sa[right]] ?? 0) > 0 {
+                counter -= 1
+            }
+            dict[sa[right]] = (dict[sa[right]] ?? 0) - 1
+            right += 1
+            while counter == 0 {
+                if minLen > right - left {
+                    minLen = right - left
+                    ans = s[left..<right]
+                }
+                if (dict[sa[left]] ?? 0) == 0 { //移动左指针直到不包含t中的全部
+                    counter += 1
+                }
+                dict[sa[left]]! += 1
+                left += 1
+            }
+        }
+        return ans
+    }
+
+    //至多出现k次的子串最大长度
+    func longestSubstring(_ s: String, _ k: Int) -> Int {
+        let sa = Array(s)
+        var left = 0
+        var right = 0
+        var dict: [Character:Int] = [:]//[char:times]
+        var maxLen = 0
+        var counter = 0
+        while right <= sa.count-1 {
+            if (dict[sa[right]] ?? 0) == 0 {
+                counter += 1
+            }
+            dict[sa[right]] = (dict[sa[right]] ?? 0) + 1
+            right += 1
+            while counter > k {
+                if (dict[sa[left]] ?? 0) == 1 {
+                    counter -= 1
+                }
+                dict[sa[left]]! -= 1
+                left += 1
+            }
+            maxLen = max(maxLen, right - left)
+        }
+        return maxLen
+    }
+    func lengthOfLongestSubstring(_ s: String) -> Int {
+        var dict: [Character:Int] = [:]//[char:lastShowIndex]
+        let sa = Array(s)
+        var left = 0
+        var right = 0
+        var maxLen = 0
+        while right <= sa.count-1 {
+            let key = sa[right]
+            if dict[key] != nil {//出现重复时开始移动左指针直到没有重复
+                let pos = dict[key]!
+                while left <= pos {
+                    dict.removeValue(forKey: sa[left])
+                    left += 1
+                }
+            }
+            dict[key] = right
+            maxLen = max(maxLen, right+1-left)
+            right += 1
+        }
+        return maxLen
+    }
+
+    func lengthOfLongestSubstring3(_ s: String) -> Int {
+        let sa = Array(s)
+        var left = 0
+        var right = 0
+        var dict: [Character:Int] = [:]//[char:times]
+        var maxLen = 0
+        var counter = 0
+        while right <= sa.count-1 {
+            if (dict[sa[right]] ?? 0) > 0 {
+                counter += 1 //一直移动右指针直到出现重复
+            }
+            dict[sa[right]] = (dict[sa[right]] ?? 0) + 1
+            right += 1
+            while counter > 0 {
+                if (dict[sa[left]] ?? 0) > 1 {
+                    counter -= 1//一直移动左指针直到没有重复了
+                }
+                dict[sa[left]]! -= 1
+                left += 1
+            }
+            maxLen = max(maxLen, right - left)
+        }
+        return maxLen
+    }
+
+    func lengthOfLongestSubstring2(_ s: String) -> Int {
+        let sa = Array(s)
+        var left = 0
+        var right = 0
+        var dict: [Character:Int] = [:]//[char:times]
+        var maxLen = 0
+        var hasDuplicated = false
+        while right <= sa.count-1 {
+            if (dict[sa[right]] ?? 0) > 0 {
+                hasDuplicated = true //一直移动右指针直到出现重复
+            }
+            dict[sa[right]] = (dict[sa[right]] ?? 0) + 1
+            right += 1
+            while hasDuplicated {
+                if (dict[sa[left]] ?? 0) > 1 {
+                    hasDuplicated = false//一直移动左指针直到没有重复了
+                }
+                dict[sa[left]]! -= 1
+                left += 1
+            }
+            maxLen = max(maxLen, right - left)
+        }
+        return maxLen
+    }
+    /**
+     中心发散，对于可能的最小回文中心 1个元素 / 2个相同元素
+     往左右扩张，如果左右都相同继续扩展，直到左右不相同
+     */
+    func longestPalindrome(_ s: String) -> String {
+        if s.count < 1 {
+            return ""
+        }
+        let sa = Array(s)
+        var start = 0
+        var end = 0
+        var maxLen = 1
+        for (index, _) in sa.enumerated() {
+            let len1 = expand(sa, index, index)
+            let len2 = expand(sa, index, index + 1)
+            let len = max(len1, len2)
+            if len > maxLen {
+                maxLen = len
+                start = index - (maxLen-1)/2
+                end = index + maxLen/2
+            }
+        }
+        return s[start...end]
+    }
+
+    /**
+     return 以 left 为左边界，right 为右边界，扩展开最长的回文串的长度
+     */
+    func expand(_ sa: [Character], _ left: Int, _ right: Int) -> Int {
+        var left = left
+        var right = right
+        while left >= 0 && right <= sa.count - 1 && sa[left] == sa[right] {
+            left -= 1
+            right += 1
+        }
+        let len = right - left + 1
+        return len - 2
+    }
+    /*
+     动态规划
+     一个元素肯定是回文，两个相同元素回文
+     长度大于2的字符串左边界和右边界不同时肯定不回文，相同时等价于删除左右边界后缩小规模的字符串
+     动态规划的顺序是从短的字符串到长的字符串，所以枚举子串长度，先求出长为2的全部子串是否回文，再求出长为3的全部子串是否回文，对于每一个回文的子字符串统计长度，更新最大长度，同时更新左边界
+     结果即为 s[begin..<begin+max]
+     */
+    func longestPalindrome2(_ s: String) -> String {
+        let len = s.count
+        if len < 2 {
+            return s
+        }
+        let sa = Array(s)
+        var ansBegin = 0
+        var max = 1 //初始最大长度为1，一个元素
+        var dp: [[Bool?]] = Array(repeating: Array(repeating: nil, count: len), count: len)
+        for i in (0..<s.count) {
+            dp[i][i] = true//所有长度为1的子串都是回文的
+        }
+        //在状态转移方程中，我们是从长度较短的字符串向长度较长的字符串进行转移的，因此一定要注意动态规划的循环顺序。
+        //先枚举子串长度
+        for L in (2...len) {
+            //枚举左边界
+            for left in (0..<len) {//right - left + 1 = Len
+                let right = L + left - 1//计算右边界
+                if right >= len {
+                    break
+                }
+                let subStrLen = right - left + 1
+                if sa[left] != sa[right] {//对于任意子串左边界与右边界不等即不回文
+                    dp[left][right] = false
+                } else {
+                    //子串左边界与右边界相等时，长度小于3即回文，长度大于3缩小规模再判断
+                    if subStrLen <= 3 {
+                        dp[left][right] = true
+                    } else {
+                        dp[left][right] = dp[left+1][right-1]
+                    }
+                }
+
+                if dp[left][right]! && subStrLen > max {
+                    max = subStrLen
+                    ansBegin = left
+                }
+            }
+        }
+
+        return s[ansBegin..<ansBegin+max]
     }
 
     func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
@@ -179,6 +711,27 @@ public class Solution {
     }
 
     func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
+        var current = m + n - 1
+        var m = m-1
+        var n = n-1
+        while(m >= 0 && n >= 0) {
+            if nums1[m] > nums2[n] {
+                nums1[current] = nums1[m]
+                m -= 1
+            } else {
+                nums1[current] = nums2[n]
+                n -= 1
+            }
+            current -= 1
+        }
+        while n >= 0 {
+            nums1[current] = nums2[n]
+            n -= 1
+            current -= 1
+        }
+    }
+
+    func merge2(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
         if m == 0 {
             nums1 = nums2
             return

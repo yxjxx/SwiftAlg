@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DE3A5B82260748F800484C51 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3A5B81260748F800484C51 /* main.swift */; };
+		DE45A10D26EE04E200A68602 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE45A10C26EE04E200A68602 /* Queue.swift */; };
 		DEB1536426E2132E002B7BD7 /* DataStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB1536326E2132E002B7BD7 /* DataStructs.swift */; };
 		DEB1536626E77758002B7BD7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB1536526E77758002B7BD7 /* Extensions.swift */; };
 		DEB1537B26E899DD002B7BD7 /* MyHashTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB1537A26E899DD002B7BD7 /* MyHashTable.swift */; };
@@ -31,6 +32,7 @@
 /* Begin PBXFileReference section */
 		DE3A5B7E260748F800484C51 /* SwiftAlg */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SwiftAlg; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE3A5B81260748F800484C51 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		DE45A10C26EE04E200A68602 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		DEB1536326E2132E002B7BD7 /* DataStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructs.swift; sourceTree = "<group>"; };
 		DEB1536526E77758002B7BD7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DEB1537A26E899DD002B7BD7 /* MyHashTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyHashTable.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				DE3A5B81260748F800484C51 /* main.swift */,
 				DEF6912F2608C2A5004F31DE /* Solution.swift */,
 				DEB1536326E2132E002B7BD7 /* DataStructs.swift */,
+				DE45A10C26EE04E200A68602 /* Queue.swift */,
 				DEB1536526E77758002B7BD7 /* Extensions.swift */,
 				DEB1537A26E899DD002B7BD7 /* MyHashTable.swift */,
 				DEB1537C26E8AF63002B7BD7 /* ReverseList.swift */,
@@ -140,6 +143,7 @@
 				DEB1537D26E8AF63002B7BD7 /* ReverseList.swift in Sources */,
 				DEF691302608C2A5004F31DE /* Solution.swift in Sources */,
 				DEB1537F26E8B4B8002B7BD7 /* Sorter.swift in Sources */,
+				DE45A10D26EE04E200A68602 /* Queue.swift in Sources */,
 				DEB1536426E2132E002B7BD7 /* DataStructs.swift in Sources */,
 				DEB1537B26E899DD002B7BD7 /* MyHashTable.swift in Sources */,
 				DE3A5B82260748F800484C51 /* main.swift in Sources */,
