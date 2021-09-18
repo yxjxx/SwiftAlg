@@ -47,6 +47,160 @@ class KthLargest {
  */
 
 public class Solution {
+//    152. 乘积最大子数组
+//    func maxProduct(_ nums: [Int]) -> Int {
+//
+//    }
+    func isCompleteTree(_ root: TreeNode?) -> Bool {
+        if (root == nil) {
+            return true
+        }
+        let a: Repeated<String> = repeatElement("SwiftRocks", count: 3)
+        var queue: Queue<TreeNode?> = Queue()
+        var leafShow: Bool = false
+        queue.enqueue(root!)
+        while (!queue.isEmpty) {
+            let node = queue.dequeue()!
+            if (node == nil) {
+                leafShow = true
+            } else if node != nil {
+                if leafShow {
+                    return false
+                }
+                queue.enqueue(node!.left)
+                queue.enqueue(node!.right)
+            }
+        }
+        return true
+    }
+
+    func searchRange(_ nums: [Int], _ target: Int) -> [Int] {
+        func robot(_ nums: [Int], _ target: Int, _ lower: Bool) -> Int {
+            var res = nums.count
+            var left = 0
+            var right = nums.count - 1
+            while left <= right {
+                let middle = (left + right) / 2
+                if target < nums[middle] ||
+                    (lower && target <= nums[middle]){
+                    right = middle - 1
+                    res = middle
+                } else {
+                    left = middle + 1
+                }
+            }
+            return res
+        }
+        let start = robot(nums, target, true)
+        let end = robot(nums, target, false) - 1
+        if start <= end &&
+            end < nums.count &&
+            nums[start] == target &&
+            nums[end] == target {
+            return [start, end]
+        }
+        return [-1, -1]
+    }
+    //动态规划 (a)b a，b为缩小了的问题规模。
+    func generateParenthesis(_ n: Int) -> [String] {
+        var cache:[[String]?] = Array(repeating: nil, count: 10)
+        cache[0] = [""]
+        cache[1] = ["()"]
+        func robot(_ n: Int) -> [String] {
+            if cache[n] != nil {
+                return cache[n]!
+            }
+            var res: [String] = []
+            for i in (0..<n) {
+                for a in robot(i) {
+                    for b in robot(n - i - 1) {
+                        res.append("(" + a + ")" + b)
+                    }
+                }
+            }
+            cache[n] = res
+            return res
+        }
+        return robot(n)
+    }
+    func letterCombinations(_ digits: String) -> [String] {
+        var dict: [Character:[Character]] = [:]
+        dict["2"] = ["a", "b", "c"]
+        dict["3"] = ["d", "e", "f"]
+        dict["4"] = ["g", "h", "i"]
+        dict["5"] = ["j", "k", "l"]
+        dict["6"] = ["m", "n", "o"]
+        dict["7"] = ["p", "q", "r", "s"]
+        dict["8"] = ["t", "u", "v"]
+        dict["9"] = ["w", "x", "y", "z"]
+        let a = Array(digits)
+        func dfs(_ digits: [Character], _ depth: Int, _ stack: inout Stack<Character>, _ ans: inout [String]) {
+            if depth == digits.count {
+                ans.append(String(stack.toArray()))
+                return
+            }
+            let letters = dict[digits[depth]]!
+            for (_, c) in letters.enumerated() {
+                stack.push(c)
+                dfs(digits, depth + 1, &stack, &ans)
+                let _ = stack.pop()
+            }
+        }
+        func dfs(_ digits: [Character], _ depth: Int, _ str: inout String, _ ans: inout [String]) {
+            if depth == digits.count {
+                ans.append(str)
+                return
+            }
+            let letters = dict[digits[depth]]!
+            for (_, c) in letters.enumerated() {
+                str.append(c)
+                dfs(digits, depth + 1, &str, &ans)
+                str.removeLast()
+            }
+        }
+
+        var stack: Stack<Character> = Stack()
+        var str = ""
+        var ans: [String] = []
+        if (a.count == 0) { return ans }
+        dfs(a, 0, &str, &ans)
+        return ans
+    }
+    func search(_ nums: [Int], _ target: Int) -> Int {
+        func robot(_ nums: [Int], _ target: Int, _ low: Int, _ high: Int) -> Int {
+            if low > high {
+                return -1
+            }
+            if low == high {
+                return nums[low] == target ? low : -1
+            }
+            var nextLow = low
+            var nextHigh = high
+            let middle = (low + high) / 2
+            if target == nums[middle] {
+                return middle
+            } else if target > nums[middle] {
+                let m = (middle + high) / 2
+                let increase = (nums[middle] <= nums[m] && nums[m] <= nums[high])//是否递增数列
+                if !increase || (increase && target <= nums[high]) {
+                    nextLow = middle + 1
+                } else {
+                    nextHigh = middle - 1
+                }
+            } else {
+                let m = (low + middle) / 2
+                let increase = (nums[low] <= nums[m] && nums[m] <= nums[middle])
+                if !increase || (increase && nums[low] <= target) {
+                    nextHigh = middle - 1
+                } else {
+                    nextLow = middle + 1
+                }
+            }
+            return robot(nums, target, nextLow, nextHigh)
+        }
+        return robot(nums, target, 0, nums.count - 1)
+    }
+
     func findDisappearedNumbers(_ nums: [Int]) -> [Int] {
         //数组做 hash
         var nums = nums

@@ -129,7 +129,7 @@ public class ListNode {
     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
 }
 
-public class TreeNode : Equatable {
+public class TreeNode : Equatable, Identifiable {
     public static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
         lhs === rhs
     }

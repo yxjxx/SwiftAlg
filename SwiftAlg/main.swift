@@ -129,7 +129,7 @@ var t1 = TreeNode(1, t2, t3)
 //let ans = sorter.sortArray([5, 4, 3, 6, 1, 2])
 //print(ans)
 
-let res = a.findDisappearedNumbers([2,2])//([-2,-1,-1,1,1,2,2], 0)//([1,3,-1,-3,5,3,6,7], 3)
+let res = a.searchRange([5,7,7,8,8,10], 8)//([-2,-1,-1,1,1,2,2], 0)//([1,3,-1,-3,5,3,6,7], 3)r
 //let res = a.minWindow("ba", "a")
 print(res)
 
